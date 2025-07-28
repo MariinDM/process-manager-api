@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { TokensModule } from './tokens/tokens.module';
 
 @Module({
   imports: [
@@ -15,10 +16,14 @@ import { UsersModule } from './users/users.module';
       username: 'postgres',
       password: 'postgres',
       database: 'process_manager_db',
-      autoLoadEntities: true,
-      synchronize: true,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      migrations: [__dirname + '/migrations/*{.ts,.js}'],
+      synchronize: false,
+      migrationsRun: true,
+      logging: true,
     }),
     UsersModule,
+    TokensModule,
   ],
   controllers: [AppController],
   providers: [AppService],

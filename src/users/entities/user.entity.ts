@@ -1,4 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Token } from "src/tokens/entities/token.entity";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -15,10 +16,10 @@ export class User {
     password: string;
 
     @CreateDateColumn()
-    created_at: Date;
+    createdAt: Date;
 
     @UpdateDateColumn({ nullable: true })
-    updated_at: Date;
+    updatedAt: Date;
 
     @BeforeInsert()
     @BeforeUpdate()
@@ -27,4 +28,7 @@ export class User {
         const saltRounds = 10;
         this.password = await bcrypt.hash(this.password, saltRounds);
     }
+
+    @OneToMany(() => Token, token => token.user)
+    tokens: Token[];
 }

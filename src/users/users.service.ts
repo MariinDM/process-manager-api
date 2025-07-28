@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -12,17 +12,33 @@ export class UsersService {
     @InjectRepository(User) private usersRepository: Repository<User>
   ) { }
 
-  async create(createUserDto: CreateUserDto) {
-    const user = this.usersRepository.create(createUserDto);
-    return await this.usersRepository.save(user);
-  }
-
   async findAll() {
     return await this.usersRepository.find();
   }
 
   async findOne(id: number) {
     return await this.usersRepository.findOne({ where: { id } });
+  }
+
+  async findByEmail(email: string) {
+    return await this.usersRepository.findOne({ where: { email } });
+  }
+
+  async findByUsername(username: string) {
+    return await this.usersRepository.findOne({ where: { username } });
+  }
+
+  async create(createUserDto: CreateUserDto) {
+
+    const existsEmail = await this.findByEmail(createUserDto.email);
+    const existsUsername = await this.findByUsername(createUserDto.username);
+
+    if (existsEmail || existsUsername) {
+      throw new ConflictException('El email o username ya están registrados');
+    }
+
+    const user = await this.usersRepository.create(createUserDto);
+    return await this.usersRepository.save(user);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
