@@ -15,6 +15,9 @@ export class Task {
     @Column({ type: 'enum', enum: ['pending', 'in_progress', 'completed'] })
     status: 'pending' | 'in_progress' | 'completed';
 
+    @Column({ default: true })
+    active: boolean;
+
     @CreateDateColumn()
     createdAt: Date;
 

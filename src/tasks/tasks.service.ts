@@ -12,24 +12,51 @@ export class TasksService {
     @InjectRepository(Task) private tasksRepository: Repository<Task>
   ) { }
 
-  findAll() {
-    return this.tasksRepository.find();
+  async findAll() {
+
+    const tasks = await this.tasksRepository.find();
+    if (!tasks || tasks.length === 0) {
+      return { message: 'No tasks found', data: [] };
+    }
+
+    return { message: 'Tasks retrieved successfully', data: tasks };
   }
 
-  findOne(id: number) {
-    return this.tasksRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    const task = await this.tasksRepository.findOne({ where: { id } });
+    if (!task) {
+      return { message: 'Task not found', data: null };
+    }
+    return { message: 'Task retrieved successfully', data: task };
   }
 
-  create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDto) {
     const task = this.tasksRepository.create(createTaskDto);
-    return this.tasksRepository.save(task);
+    await this.tasksRepository.save(task);
+    return { message: 'Task created successfully', data: null };
+  }
+  async update(id: number, updateTaskDto: UpdateTaskDto) {
+    const task = await this.tasksRepository.preload({
+      id,
+      ...updateTaskDto,
+    });
+
+    if (!task) {
+      return { message: 'Task not found', data: null };
+    }
+
+    await this.tasksRepository.save(task);
+    return { message: 'Task updated successfully', data: task };
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return this.tasksRepository.update(id, updateTaskDto);
-  }
+  async remove(id: number) {
+    const task = await this.findOne(id);
+    if (!task) {
+      return { message: 'Task not found', data: null };
+    }
 
-  remove(id: number) {
-    return this.tasksRepository.delete(id);
+    await this.tasksRepository.update(id, { active: false });
+    return { message: 'Task removed successfully', data: null };
+
   }
 }
