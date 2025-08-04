@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { User } from './users/entities/user.entity';
 import { Token } from './tokens/entities/token.entity';
+import { Task } from './tasks/entities/task.entity';
 
 const AppDataSource = new DataSource({
     type: 'postgres',
@@ -11,7 +12,7 @@ const AppDataSource = new DataSource({
     database: process.env.DB_NAME || 'process_manager_db',
     synchronize: false,
     logging: true,
-    entities: [User, Token],
+    entities: [User, Token, Task],
     migrations: ['dist/migrations/*.js'],
     migrationsTableName: 'migrations',
 });
