@@ -13,19 +13,40 @@ export class UsersService {
   ) { }
 
   async findAll() {
-    return await this.usersRepository.find();
+    const users = await this.usersRepository.find();
+    if (!users || users.length === 0) {
+      return { message: 'No users found', data: [] };
+    }
+    return { message: 'Users retrieved successfully', data: users };
   }
 
   async findOne(id: number) {
-    return await this.usersRepository.findOne({ where: { id } });
+
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      return { message: 'User not found', data: null };
+    }
+
+    return { message: 'User retrieved successfully', data: user };
   }
 
   async findByEmail(email: string) {
-    return await this.usersRepository.findOne({ where: { email } });
+
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) {
+      return null;
+    }
+
+    return user;
   }
 
   async findByUsername(username: string) {
-    return await this.usersRepository.findOne({ where: { username } });
+    const user = await this.usersRepository.findOne({ where: { username } });
+    if (!user) {
+      return null;
+    }
+
+    return user;
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -38,15 +59,47 @@ export class UsersService {
     }
 
     const user = await this.usersRepository.create(createUserDto);
-    return await this.usersRepository.save(user);
+    await this.usersRepository.save(user);
+
+    return { message: 'User created successfully', data: null };
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return await this.usersRepository.update(id, updateUserDto);
+
+    const userResponse = await this.findOne(id);
+    if (!userResponse.data) {
+      return { message: 'User not found', data: null };
+    }
+
+    const currentUser = userResponse.data;
+
+    if (updateUserDto.email && updateUserDto.email !== currentUser.email) {
+      const existsEmail = await this.findByEmail(updateUserDto.email);
+      if (existsEmail) {
+        throw new ConflictException('El email ya está registrado');
+      }
+    }
+
+    if (updateUserDto.username && updateUserDto.username !== currentUser.username) {
+      const existsUsername = await this.findByUsername(updateUserDto.username);
+      if (existsUsername) {
+        throw new ConflictException('El username ya está registrado');
+      }
+    }
+
+    await this.usersRepository.update(id, updateUserDto);
+    return { message: 'User updated successfully', data: null };
   }
 
   async remove(id: number) {
-    return await this.usersRepository.delete(id);
+
+    const user = await this.findOne(id);
+    if (!user) {
+      return { message: 'User not found', data: null };
+    }
+
+    await this.usersRepository.update(id, { active: false });
+    return { message: 'User removed successfully', data: null };
   }
 
 }

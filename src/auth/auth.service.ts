@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { TokensService } from '../tokens/tokens.service';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/entities/user.entity';
+import { AuthLogin } from './dto/auth.validator';
 
 @Injectable()
 export class AuthService {
@@ -13,10 +14,10 @@ export class AuthService {
         private tokensService: TokensService,
     ) { }
 
-    async validateUser(email: string, password: string) {
-        const user = await this.usersService.findByEmail(email);
-        if (user && await bcrypt.compare(password, user.password)) {
-            return user;
+    async validateUser(user: AuthLogin) {
+        const tmpUser = await this.usersService.findByEmail(user.email);
+        if (tmpUser && await bcrypt.compare(user.password, tmpUser.password)) {
+            return tmpUser;
         }
         throw new UnauthorizedException('Credenciales inválidas');
     }
