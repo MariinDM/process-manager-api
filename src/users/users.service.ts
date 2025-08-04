@@ -58,10 +58,10 @@ export class UsersService {
       throw new ConflictException('El email o username ya están registrados');
     }
 
-    const user = await this.usersRepository.create(createUserDto);
-    await this.usersRepository.save(user);
+    const user = this.usersRepository.create(createUserDto);
+    const savedUser = await this.usersRepository.save(user);
 
-    return { message: 'User created successfully', data: null };
+    return savedUser;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
