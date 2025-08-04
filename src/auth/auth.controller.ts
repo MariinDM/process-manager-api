@@ -14,22 +14,22 @@ export class AuthController {
     @Post('login')
     async login(@Body() body: AuthLogin) {
         const user = await this.authService.validateUser(body);
-        return this.authService.generateTokens(user);
+        return await this.authService.generateTokens(user);
     }
 
     @Public()
     @Post('register')
     async register(@Body() body: CreateUserDto) {
-        return this.authService.register(body);
+        return await this.authService.register(body);
     }
 
     @Post('refresh')
     async refresh(@Body() body: { refresh_token: string }) {
-        return this.authService.refresh(body.refresh_token);
+        return await this.authService.refresh(body.refresh_token);
     }
 
     @Post('logout')
     async logout(@Body() body: { refresh_token: string }) {
-        return this.authService.logout(body.refresh_token);
+        return await this.authService.logout(body.refresh_token);
     }
 }
