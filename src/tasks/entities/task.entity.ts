@@ -12,8 +12,8 @@ export class Task {
     @Column()
     description: string;
 
-    @Column({ type: 'enum', enum: ['pending', 'in_progress', 'completed'] })
-    status: 'pending' | 'in_progress' | 'completed';
+    @Column({ type: 'enum', enum: ['pending', 'in_progress', 'completed', 'cancelled'] })
+    status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
 
     @Column({ default: true })
     active: boolean;

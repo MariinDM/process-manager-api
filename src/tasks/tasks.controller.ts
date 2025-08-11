@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -13,8 +13,12 @@ export class TasksController {
   }
 
   @Get()
-  async findAll() {
-    return await this.tasksService.findAll();
+  async findAll(
+    @Query('status') status?: string,
+    @Query('limit') limit?: string,
+    @Query('active') active?: boolean
+  ) {
+    return await this.tasksService.findAll(status, limit ? +limit : undefined, active ?? true);
   }
 
   @Get(':id')
