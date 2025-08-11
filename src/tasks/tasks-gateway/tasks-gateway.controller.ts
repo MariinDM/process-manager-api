@@ -23,11 +23,18 @@ export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log(`Cliente desconectado: ${client.id}`);
     }
 
+    sendTaskCreated(task: any) {
+        this.server.emit('taskCreate', task);
+        console.log(`Tarea creada: ${task.id}`);
+    }
+
     sendTaskUpdate(task: any) {
         this.server.emit('taskUpdate', task);
+        console.log(`Tarea actualizada: ${task.id}`);
     }
 
     sendTaskRemoved(taskId: number) {
-        this.server.emit('taskDeletion', taskId);
+        this.server.emit('taskDelete', taskId);
+        console.log(`Tarea eliminada: ${taskId}`);
     }
 }
