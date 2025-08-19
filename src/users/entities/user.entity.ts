@@ -1,6 +1,7 @@
+import { BasicInfo } from "src/basic-info/entities/basic-info.entity";
 import { Task } from "src/tasks/entities/task.entity";
 import { Token } from "src/tokens/entities/token.entity";
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -40,4 +41,10 @@ export class User {
         cascade: true,
     })
     tasks: Task[];
+
+    @OneToOne(() => BasicInfo, basicInfo => basicInfo.user, {
+        cascade: true,
+        eager: true
+    })
+    basicInfo: BasicInfo;
 }

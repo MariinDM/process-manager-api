@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { TokensModule } from './tokens/tokens.module';
 import { TasksModule } from './tasks/tasks.module';
+import { BasicInfoModule } from './basic-info/basic-info.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TasksModule } from './tasks/tasks.module';
     UsersModule,
     TokensModule,
     TasksModule,
+    BasicInfoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
