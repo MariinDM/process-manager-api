@@ -12,24 +12,24 @@ export class BasicInfoService {
     @InjectRepository(BasicInfo) private basicInfoRepository: Repository<BasicInfo>
   ) { }
 
-  create(createBasicInfoDto: CreateBasicInfoDto) {
+  async create(createBasicInfoDto: CreateBasicInfoDto) {
     const basicInfo = this.basicInfoRepository.create(createBasicInfoDto);
-    return this.basicInfoRepository.save(basicInfo);
+    return await this.basicInfoRepository.save(basicInfo);
   }
 
-  findAll() {
-    return this.basicInfoRepository.find();
+  async findAll() {
+    return await this.basicInfoRepository.find();
   }
 
-  findOne(id: number) {
-    return this.basicInfoRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    return await this.basicInfoRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateBasicInfoDto: UpdateBasicInfoDto) {
-    return this.basicInfoRepository.update(id, updateBasicInfoDto);
+  async update(id: number, updateBasicInfoDto: UpdateBasicInfoDto) {
+    return await this.basicInfoRepository.update(id, updateBasicInfoDto);
   }
 
-  remove(id: number) {
-    return this.basicInfoRepository.delete(id);
+  async remove(id: number) {
+    return await this.basicInfoRepository.delete(id);
   }
 }

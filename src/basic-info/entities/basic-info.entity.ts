@@ -1,5 +1,5 @@
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 export interface EducationInfo {
     degree: string;
@@ -53,5 +53,6 @@ export class BasicInfo {
     skills: string[];
 
     @OneToOne(() => User, user => user.basicInfo)
+    @JoinColumn()
     user: User;
 }
