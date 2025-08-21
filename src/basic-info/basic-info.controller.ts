@@ -2,8 +2,6 @@ import { Controller, Get, Post, Body, Param, Delete, Put, Request } from '@nestj
 import { BasicInfoService } from './basic-info.service';
 import { CreateBasicInfoDto } from './dto/create-basic-info.dto';
 import { UpdateBasicInfoDto } from './dto/update-basic-info.dto';
-import { User } from 'src/decorators/user.decorator';
-import { use } from 'passport';
 
 @Controller('api/basic-info')
 export class BasicInfoController {
